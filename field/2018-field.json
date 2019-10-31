@@ -1,0 +1,19 @@
+{
+    "game": "PowerUP",
+    "image": "2018-field.jpg",
+    "bounds": {
+        "top-left": [
+            125,
+            20
+        ],
+        "bottom-right": [
+            827,
+            370
+        ]
+    },
+    "size": [
+        54,
+        27
+    ],
+    "unit": "Feet"
+}
