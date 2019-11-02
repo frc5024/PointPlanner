@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Point Planner</title>
+    <meta name="description" content="Web based tool similar to PathWeaver used to plot points for use in robot autonomous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="Stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+    <div id="mainContainer" style="border: none;">
+        <!-- top bar div-->
+        <div id="topBar" style="border: none;">
+            <p style="margin: 0 0 0 0;">Raider<b>Robotics</b></p>
+        </div>
+
+        <!-- field div-->
+        <div id="field">
+            <canvas id="fieldImageCanvas" width="100" height="50"></canvas>
+            <canvas id="pointCanvas" width="100" height="50"></canvas>
+        </div>
+
+        <!-- text div-->
+        <div id="textDiv">
+            <p style="margin: 16px;">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque libero id tortor luctus feugiat. Pellentesque sed libero tempor, fermentum ex sit amet, commodo mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eget lectus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed massa ante, maximus a consequat eu, sagittis ut sem. Integer ligula velit, laoreet eget risus nec, finibus vehicula dui.
+
+                Nunc ac risus blandit, imperdiet libero aliquet, pellentesque ligula. Etiam neque justo, tincidunt quis sem sed, facilisis commodo dolor. Cras sed dui vitae leo lacinia efficitur a vitae est. Etiam tempus leo id odio pretium, eu auctor lacus pellentesque. Praesent dui nibh, posuere ac dolor vel, mattis lacinia lorem. Vestibulum vel cursus turpis. In facilisis lectus ut diam luctus, fringilla tincidunt augue molestie. Pellentesque fringilla risus quis tortor egestas lacinia. Cras fringilla justo quis molestie consequat. Duis quis eros eleifend arcu fringilla efficitur. Nam augue enim, consequat et libero non, sagittis sollicitudin dolor. Proin hendrerit id enim fermentum ultrices. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer in ipsum eget nisl commodo pellentesque.
+            </p>
+        </div>
+        
+        <!-- options div-->
+        <div id="options">
+            <p id="fieldP">field</p><p id="exportP">export type</p><br>
+            <!-- field selector -->
+            <select id="fieldSelection" class="dropDown" value="0"></select>
+
+            <!-- export selector -->
+            <select id="exportSelection" class="dropDown">
+                <option class="dropDown" value="csv" selected>csv</option>
+                <option  class="dropDown" value="json">json</option>
+                <option  class="dropDown" value="java">pre-generated java</option>
+            </select>
+
+            <button id="exportButton">Export</button>
+        </div>
+
+        <!-- point list div-->
+        <div id="points">
+            <h2 class="title">Generated Points</h2>
+            <table>
+                <tr>    
+                    <th></th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>θ</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><button>🔆</button></td>
+                    <td><input class="number"  value="103.3"></td>
+                    <td><input class="number"  value="611.15"></td>
+                    <td><input class="number"  value="13.3"></td>
+                    <td><button class="redButton">x</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="fieldLinks.js"></script>
+    <script src="js/resize.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/load.js"></script>
+    <script src="js/getJSON.js"></script>
+    <script src="js/draw.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
