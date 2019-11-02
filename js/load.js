@@ -11,7 +11,7 @@ function loadField(linksIndex) {
             addImage(field.pngURL, index);
             generateOption(index);
 
-            if(fieldJSONs.length === links.length) {
+            if(fieldImages.length === links.length) {
                 loadSave();
             }
         }

@@ -22,6 +22,7 @@ p {
 
 table {
     border: 1px solid #555555;
+    width:100%;
 }
 
 button {
@@ -86,6 +87,7 @@ canvas {
     top: 4%;
     position: absolute;
     display: inline-block;
+    overflow-y: scroll;
 }
 
 #fieldP {
