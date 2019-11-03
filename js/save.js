@@ -1,7 +1,11 @@
 function save() {
     var saveObj = {};
     saveObj.field = selectedField;
-    saveObj.points = points;
+    var p = [];
+    for(var i=0,l=points.length; i<l; i++) {
+        p.push([points[i].x,points[i].y,points[i].angle]);
+    }
+    saveObj.points = p;
     localStorage.pointPlannerSave = JSON.stringify(saveObj);
 }
 
@@ -10,10 +14,11 @@ function loadSave() {
         var s = JSON.parse(localStorage.pointPlannerSave);
         if(s.field !== undefined) {
             document.getElementById("fieldSelection").value = s.field;
+            document.getElementById(`option${s.field}`).selected = true;
         }
         if(s.points !== undefined) {
             for(var i=0, l=s.points.length; i<l; i++) {
-                points.push(new point(s.points[i].x,s.points[i].y));
+                points.push(new point(s.points[i][0],s.points[i][1],s.points[i][2]));
             }
         }
     }

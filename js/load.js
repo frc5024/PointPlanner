@@ -30,7 +30,11 @@ function generateOption(index) {
     var o = document.createElement("option");
     o.class = "dropDown";
     o.value = index;
+    o.id = `option${index}`;
     o.innerHTML = fieldJSONs[index].game;
+    if(index===0) {
+        o.selected = true;
+    }
 
     document.getElementById("fieldSelection").appendChild(o);
 }

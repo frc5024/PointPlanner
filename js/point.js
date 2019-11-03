@@ -11,6 +11,7 @@ class point {
 
         this.xCell = document.getElementById(`x${this.id}`);
         this.yCell = document.getElementById(`y${this.id}`);
+        this.angleCell = document.getElementById(`angle${this.id}`);
 
         this.meterX = this.metersBasedOnPixels().x;
         this.meterY = this.metersBasedOnPixels().y;
@@ -21,20 +22,78 @@ class point {
     get pixelY() {return this.y;}
 
     set meterX(n) {this.xCell.value = n;}
-    get meterX() {return parseInt(this.xCell.value);}
+    get meterX() {return parseFloat(this.xCell.value);}
     set meterY(n) {this.yCell.value = n;}
-    get meterY() {return parseInt(this.yCell.value);}
+    get meterY() {return parseFloat(this.yCell.value);}
+
+    set theta(n) {this.angleCell.value = n;}
+    get theta() {return parseInt(this.angleCell.value);}
 }
 
 point.prototype.draw = function() {
-    img(arrow, this.x * ratio.x, this.y * ratio.y, this.angle);
+    img(arrow, this.x * ratio.x, this.y * ratio.y, degToRad(this.angle));
     circle(this.x * ratio.x, this.y * ratio.y, this.r, "#53e346");
 }
 
-point.prototype.update = function(pos) {
-    if(circlePoint(this,pos)) {
-        hoveringOverPoint = true;
+point.prototype.update = function(pos,i) {
+    if(!grabInfo.grabbing) {
+        if(circlePoint(this,pos)) {
+            cursor = "grab";
+            if(mouseDown[0]) {
+                cursor = "grabbing";
+                grabInfo.grabbing = true;
+                grabInfo.index = i;
+                grabInfo.part = "point";
+            } 
+        }
+        var arrowHitBox = {};
+        arrowHitBox.x = this.x + 12 * Math.sin(degToRad(this.angle));
+        arrowHitBox.y = this.y - 12 * Math.cos(degToRad(this.angle));
+        arrowHitBox.r = 6;
+        if(circlePoint(arrowHitBox,pos)) {
+            cursor = "move";
+            if(mouseDown[0]) {
+                cursor = "grabbing";
+                grabInfo.grabbing = true;
+                grabInfo.index = i;
+                grabInfo.part = "arrow";
+            } 
+        }
     }
+
+    if(grabInfo.grabbing && grabInfo.index === i) {
+        if(grabInfo.part === "point") {
+            cursor = "grabbing";
+            this.x = pos.x;
+            this.y = pos.y;
+
+            this.meterX = this.metersBasedOnPixels().x;
+            this.meterY = this.metersBasedOnPixels().y;
+            save();
+            if( !mouseDown[0] ) {
+                grabInfo.grabbing = false;
+            }
+        }
+        if(grabInfo.part === "arrow") {
+            cursor = "grabbing";
+            var angleToSet = Math.round(radToDeg(pointTo(this,pos) + Math.PI/2));
+            if(angleToSet<0) {
+                angleToSet = 360 + angleToSet;
+            }
+            this.theta = angleToSet;
+            this.angle = angleToSet;
+            save();
+            if( !mouseDown[0] ) {
+                grabInfo.grabbing = false;
+            }
+        }
+    }
+
+    // set values based off of inputs in table
+    var meters = this.metersBasedOnPixels();
+    if(this.meterX !== meters.x) {this.pixelX = this.pixelsBasedOnMeters().x;save();}
+    if(this.meterY !== meters.y) {this.pixelY = this.pixelsBasedOnMeters().y;save();}
+    if(this.angle !== this.theta) {this.angle = this.theta;save();}
 }
 
 point.prototype.metersBasedOnPixels = function() {
@@ -53,6 +112,26 @@ point.prototype.metersBasedOnPixels = function() {
     returnObj.x = Math.round(returnObj.x*100)/100;
     returnObj.y = Math.round(returnObj.y*100)/100;
 
+    return returnObj;
+}
+
+point.prototype.pixelsBasedOnMeters = function() {
+    var fc = fieldJSONs[selectedField]["field-corners"];
+    var tl = fc["top-left"];
+    var br = fc["bottom-right"];
+
+    var footDimensions = fieldJSONs[selectedField]["field-size"];
+    var meterDimensions = [footDimensions[0] * 0.3048, footDimensions[1] * 0.3048];
+    var pixelsPerMeter = [ (br[0]-tl[0]) / meterDimensions[0], (br[1]-tl[1]) / meterDimensions[1] ];
+
+    var returnObj = {
+        x: this.meterX * pixelsPerMeter[0], 
+        y: -((this.meterY * pixelsPerMeter[1]) - (br[1]-tl[1]))
+    };
+
+    returnObj.x = Math.round(returnObj.x);
+    returnObj.y = Math.round(returnObj.y);
+    
     return returnObj;
 }
 

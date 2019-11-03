@@ -8,7 +8,8 @@ var points = [];
 var pointTableCounter = 0;
 
 var ratio = {x:1,y:1};
-var hoveringOverPoint = false;
+var cursor = false;
+var grabInfo = {grabbing:false, index:0, part:"point"};
 
 var fCvs = document.getElementById("fieldImageCanvas");
 var fCtx = fCvs.getContext("2d");
@@ -40,22 +41,17 @@ function drawPoints() {
 function update() {
     var pos = {x:Math.round(mousePos.x / ratio.x), y:Math.round(mousePos.y / ratio.y)};
 
-    hoveringOverPoint = false;
+    cursor = "";
 
     // update points
     for(var i=0, l=points.length; i<l; i++) {
-        points[i].update(pos);
+        points[i].update(pos,i);
     }
-    
-    // handle cursor changes
-    if(hoveringOverPoint) {
-        pCvs.style.cursor = "pointer"
-    } else {
-        pCvs.style.cursor = "";
-    }
+
+    pCvs.style.cursor = cursor;
     
     // add new point on click
-    if(mousePress[0] && !hoveringOverPoint) {
+    if(mousePress[0] && cursor==="") {
         points.push(new point(pos.x, pos.y));
         save();
     }
