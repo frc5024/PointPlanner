@@ -44,7 +44,10 @@ point.prototype.update = function(pos,i) {
                 grabInfo.grabbing = true;
                 grabInfo.index = i;
                 grabInfo.part = "point";
+                
             } 
+            hover.shouldShow = true;
+            hover.id = i;
         }
         var arrowHitBox = {};
         arrowHitBox.x = this.x + 12 * Math.sin(degToRad(this.angle));
@@ -57,7 +60,10 @@ point.prototype.update = function(pos,i) {
                 grabInfo.grabbing = true;
                 grabInfo.index = i;
                 grabInfo.part = "arrow";
+                
             } 
+            hover.shouldShow = true;
+            hover.id = i;
         }
     }
 
@@ -69,9 +75,10 @@ point.prototype.update = function(pos,i) {
 
             this.meterX = this.metersBasedOnPixels().x;
             this.meterY = this.metersBasedOnPixels().y;
-            save();
+
             if( !mouseDown[0] ) {
                 grabInfo.grabbing = false;
+                save();
             }
         }
         if(grabInfo.part === "arrow") {
@@ -82,9 +89,10 @@ point.prototype.update = function(pos,i) {
             }
             this.theta = angleToSet;
             this.angle = angleToSet;
-            save();
+
             if( !mouseDown[0] ) {
                 grabInfo.grabbing = false;
+                save();
             }
         }
     }

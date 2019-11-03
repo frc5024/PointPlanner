@@ -18,6 +18,7 @@ div {
 
 p {
     overflow: hidden;
+    margin: 0.5em;
 }
 
 table {
@@ -42,6 +43,23 @@ button:active {
 
 canvas {
     position: absolute;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #444444; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #999999;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777777; 
 }
 
 #topBar {
@@ -153,3 +171,7 @@ canvas {
 .redButton:active {
     background-color: #5c1111;
 }
+
+.tab1 { padding-left: 4em; }
+.tab2 { padding-left: 8em; }
+.tab3 { padding-left: 12em; }

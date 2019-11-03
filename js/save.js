@@ -15,6 +15,7 @@ function loadSave() {
         if(s.field !== undefined) {
             document.getElementById("fieldSelection").value = s.field;
             document.getElementById(`option${s.field}`).selected = true;
+            selectedField = s.field;
         }
         if(s.points !== undefined) {
             for(var i=0, l=s.points.length; i<l; i++) {

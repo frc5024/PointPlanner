@@ -9,6 +9,7 @@ var pointTableCounter = 0;
 
 var ratio = {x:1,y:1};
 var cursor = false;
+var hover = {shouldShow:false,id:0};
 var grabInfo = {grabbing:false, index:0, part:"point"};
 
 var fCvs = document.getElementById("fieldImageCanvas");
@@ -42,6 +43,13 @@ function update() {
     var pos = {x:Math.round(mousePos.x / ratio.x), y:Math.round(mousePos.y / ratio.y)};
 
     cursor = "";
+    if(hover.shouldShow) {
+        var id = hover.id;
+        document.getElementById(`x${id}`).style.backgroundColor = "";
+        document.getElementById(`y${id}`).style.backgroundColor = "";
+        document.getElementById(`angle${id}`).style.backgroundColor = "";
+        hover.shouldShow = false;
+    }
 
     // update points
     for(var i=0, l=points.length; i<l; i++) {
@@ -54,6 +62,14 @@ function update() {
     if(mousePress[0] && cursor==="") {
         points.push(new point(pos.x, pos.y));
         save();
+    }
+
+    //highlight hovered
+    if(hover.shouldShow) {
+        var id = hover.id;
+        document.getElementById(`x${id}`).style.backgroundColor = "#444444";
+        document.getElementById(`y${id}`).style.backgroundColor = "#444444";
+        document.getElementById(`angle${id}`).style.backgroundColor = "#444444";
     }
 
     resetInput();
