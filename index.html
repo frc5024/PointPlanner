@@ -11,7 +11,7 @@
     <div id="mainContainer" style="border: none;">
         <!-- top bar div-->
         <div id="topBar" style="border: none;">
-            <p style="margin: 0 0 0 0;">Raider<b>Robotics</b></p>
+            <p style="margin: 2px 0 0 2px;">Raider<b>Robotics</b></p>
         </div>
 
         <!-- field div-->
@@ -38,7 +38,7 @@
         <p>Saving/Loading</p>
             <p class="tab1">The points and field selection are automatically saved to local storage, and loaded when the page is loaded.</p>
         <p>Exporting</p>
-            <p class="tab1">TODO</p>
+            <p class="tab1">Select the desired file type from the export type download, then click the export button.</p>
         </div>
         
         <!-- options div-->
@@ -54,7 +54,7 @@
                 <option  class="dropDown" value="java">pre-generated java</option>
             </select>
 
-            <button id="exportButton">Export</button>
+            <button id="exportButton" onclick="downloadExport()">Export</button>
         </div>
 
         <!-- point list div-->
@@ -74,10 +74,11 @@
     <script src="js/input.js"></script>
     <script src="js/point.js"></script>
     <script src="js/resize.js"></script>
-    <script src="js/save.js"></script>
-    <script src="js/load.js"></script>
+    <script src="js/localStorageSave.js"></script>
+    <script src="js/loadFields.js"></script>
+    <script src="js/export.js"></script>
     <script src="js/getJSON.js"></script>
-    <script src="js/collision.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/draw.js"></script>
     <script src="js/main.js"></script>
 </body>

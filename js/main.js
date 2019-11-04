@@ -1,29 +1,38 @@
-var fieldImages = [];
-var fieldJSONs = [];
+// globals, sorry
+
+var fieldImages = []; // stores loaded field pictures
+var fieldJSONs = []; // stores loaded json data
 for(var i=0;i<links.length;i++) {fieldJSONs.push(null);}
 
-var selectedField = 0;
+var selectedField = 0; // index to access fieldJSONs at, always set to the value of the field dropdown
 
-var points = [];
-var pointTableCounter = 0;
 
-var ratio = {x:1,y:1};
-var cursor = false;
-var hover = {shouldShow:false,id:0};
-var grabInfo = {grabbing:false, index:0, part:"point"};
+var points = []; // list of point objects
+var pointTableCounter = 0; // what number the id should be when adding a table row
 
+var ratio = {x:1,y:1}; // multiplier for coordinates based on how stretched the image is
+
+
+var cursor = ""; // cursor to show when pointer is over canvas
+var hover = {shouldShow:false,id:0}; // used for determining if a row should be highlighted when the respective point is hovered over
+var grabInfo = {grabbing:false, index:0, part:"point"}; // tracks what point and what part of the point is or isn't being grabbed 
+
+// bottom canvas for field image 
 var fCvs = document.getElementById("fieldImageCanvas");
 var fCtx = fCvs.getContext("2d");
 
+// top canvas for points
 var pCvs = document.getElementById("pointCanvas");
 var pCtx = fCvs.getContext("2d");
 
+// arrow picture
 var arrow = new Image();
 arrow.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAjUlEQVRYhe2V0Q2AIAwF0T1cxAkY2QlchEHwn8RI32uMiXff7esFLZQCH6K2vde298zMJStoFDu2MyU7JeTu1DIk7YCnT+pKWs2z/5sjKTdGl0GVlJrUTVUkww3uNRKVDBVHtzVju6cL1WGu5FSRO8TpX2cGqOFK7Ygs+BaSoHIiWW8zAAAAAAAAwJ+4AOU0P0lOgxy1AAAAAElFTkSuQmCC";
 
+// loop for resizing and drawing the field
 function fieldUpdateLoop() {
     selectedField = parseInt(document.getElementById("fieldSelection").value);
-    if(isNaN(selectedField)) {
+    if (isNaN(selectedField)) {
         selectedField = 0;
     }
     
@@ -32,19 +41,23 @@ function fieldUpdateLoop() {
     drawField(selectedField);
 }
 
+// loop for drawing the points onto the top canvas
 function drawPoints() {
-    for(var i=0, l=points.length; i<l; i++) {
+    for (var i=0, l=points.length; i<l; i++) {
         points[i].draw();
     }
     requestAnimationFrame(drawPoints);
 }
 
+// loop for handling point moving logic
 function update() {
+    // real position on the field picture in pixels
     var pos = {x:Math.round(mousePos.x / ratio.x), y:Math.round(mousePos.y / ratio.y)};
 
+    // reset cursor and any highlighting
     cursor = "";
-    if(hover.shouldShow) {
-        var id = hover.id;
+    if (hover.shouldShow) {
+        var id = points[hover.id].id;
         document.getElementById(`x${id}`).style.backgroundColor = "";
         document.getElementById(`y${id}`).style.backgroundColor = "";
         document.getElementById(`angle${id}`).style.backgroundColor = "";
@@ -52,21 +65,22 @@ function update() {
     }
 
     // update points
-    for(var i=0, l=points.length; i<l; i++) {
+    for (var i=0, l=points.length; i<l; i++) {
         points[i].update(pos,i);
     }
 
+    // update cursor css for top canvas
     pCvs.style.cursor = cursor;
     
-    // add new point on click
-    if(mousePress[0] && cursor==="") {
+    // add new point on click if nothing is being grabbed
+    if (mousePress[0] && cursor==="") {
         points.push(new point(pos.x, pos.y));
         save();
     }
 
-    //highlight hovered
+    // highlight row for hovered point
     if(hover.shouldShow) {
-        var id = hover.id;
+        var id = points[hover.id].id;;
         document.getElementById(`x${id}`).style.backgroundColor = "#444444";
         document.getElementById(`y${id}`).style.backgroundColor = "#444444";
         document.getElementById(`angle${id}`).style.backgroundColor = "#444444";
@@ -75,6 +89,7 @@ function update() {
     resetInput();
 }
 
+// clear points and switch fields when the drop down value is changed
 document.getElementById("fieldSelection").onchange = function() {
     selectedField = parseInt(document.getElementById("fieldSelection").value);
     for(var i=0, l=points.length; i<l; i++) {
@@ -84,12 +99,15 @@ document.getElementById("fieldSelection").onchange = function() {
     save();
 }
 
+// start loading data for the fields using links found in fieldLinks.js
 for(var i=0; i<links.length; i++) {
     loadField(i);
 }
 
+// initialize input
 addListenersTo(pCvs);
 
+// start loops
 setInterval(fieldUpdateLoop,50);
 requestAnimationFrame(drawPoints);
 setInterval(update,4);
