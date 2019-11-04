@@ -61,20 +61,20 @@ point.prototype.update = function(pos,i) {
 
         // middle hit box
         var arrowMid = {};
-        arrowMid.x = this.x + 12 * Math.sin(angleInRadians);
-        arrowMid.y = this.y - 12 * Math.cos(angleInRadians);
+        arrowMid.x = this.x + 12 * Math.sin(angleInRadians + Math.PI/2);
+        arrowMid.y = this.y - 12 * Math.cos(angleInRadians + Math.PI/2);
         arrowMid.r = 6;
 
         // left hit box
         var arrowLeft = {};
-        arrowLeft.x = (this.x + 8 * Math.sin(angleInRadians)) + (-9 * Math.sin(angleInRadians + Math.PI/2));
-        arrowLeft.y = (this.y - 8 * Math.cos(angleInRadians)) - (-9 * Math.cos(angleInRadians + Math.PI/2));
+        arrowLeft.x = (this.x + 9 * Math.sin(angleInRadians)) + (8 * Math.sin(angleInRadians + Math.PI/2));
+        arrowLeft.y = (this.y - 9 * Math.cos(angleInRadians)) - (8 * Math.cos(angleInRadians + Math.PI/2));
         arrowLeft.r = 4;
 
         // right hit box
         var arrowRight = {};
-        arrowRight.x = (this.x + 8 * Math.sin(angleInRadians)) + (9 * Math.sin(angleInRadians + Math.PI/2));
-        arrowRight.y = (this.y - 8 * Math.cos(angleInRadians)) - (9 * Math.cos(angleInRadians + Math.PI/2));
+        arrowRight.x = (this.x - 9 * Math.sin(angleInRadians)) + (8 * Math.sin(angleInRadians + Math.PI/2));
+        arrowRight.y = (this.y + 9 * Math.cos(angleInRadians)) - (8 * Math.cos(angleInRadians + Math.PI/2));
         arrowRight.r = 4;
 
         // arrow
@@ -112,7 +112,7 @@ point.prototype.update = function(pos,i) {
         if (grabInfo.part === "arrow") { // if the arrow is grabbed
             cursor = "grabbing";
             // get angle pointing towards mouse in degrees
-            var angleToSet = Math.round(radToDeg(pointTo(this,pos) + Math.PI/2));
+            var angleToSet = Math.round(radToDeg(pointTo(this,pos)));
             // change angles from -90 to -1 into 270 to 359
             if (angleToSet<0) {
                 angleToSet = 360 + angleToSet;

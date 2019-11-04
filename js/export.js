@@ -2,7 +2,7 @@ function downloadExport() {
     // create an array of objects with the desired x, y and angle
     var exportArr = [];
     for (var i=0,l=points.length; i<l; i++) {
-        exportArr.push({x:points[i].meterY,y:points[i].meterX,angle:points[i].angle});
+        exportArr.push({x:points[i].meterY,y:points[i].meterX,theta:points[i].angle});
     }
 
     var fileContentsString; // actual text of the file
@@ -17,18 +17,24 @@ function downloadExport() {
             fileName = "points.java";
             break;
         case "json":
-            // TODO
-            fileContentsString = "";
+            var s = "[\n";
+
+            for (var i=0; i<exportArr.length; i++) {
+                s += `\t{"x":${exportArr[i].x}, "y":${exportArr[i].y}, "theta": ${exportArr[i].theta}}${i!==exportArr.length-1 ? "," : ""}\n`;
+            }
+
+            s += "]";
+            fileContentsString = s;
             fileType = "application/json";
             fileName = "points.json";
             break;
         default:
         case "csv":
-            var s = "X,Y,Angle\n"; // set the first line
+            var s = "x,y,theta\n"; // set the first line
 
             // go through exportArr and add the values to the string separated by commas, with a newline at the end
             for (var i=0; i<exportArr.length; i++) {
-                s += `${exportArr[i].x},${exportArr[i].y},${exportArr[i].angle}\n`;
+                s += `${exportArr[i].x},${exportArr[i].y},${exportArr[i].theta}\n`;
             }
 
             fileContentsString = s; // set the text of the file to the string just created
