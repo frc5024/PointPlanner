@@ -23,3 +23,11 @@ function img(img,x,y,angle) {
     pCtx.drawImage(img,Math.round(-img.width/2),Math.round(-img.height/2));
     pCtx.setTransform(1, 0, 0, 1, 0, 0);
 }
+
+function line(x1,y1,x2,y2,color) {
+    pCtx.strokeStyle = color;
+    pCtx.beginPath();
+    pCtx.moveTo(x1, y1);
+    pCtx.lineTo(x2, y2);
+    pCtx.stroke();
+}

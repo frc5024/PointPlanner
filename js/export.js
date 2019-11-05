@@ -1,8 +1,8 @@
 function downloadExport() {
     // create an array of objects with the desired x, y and angle
     var exportArr = [];
-    for (var i=0,l=points.length; i<l; i++) {
-        exportArr.push({x:points[i].meterY,y:points[i].meterX,theta:points[i].angle});
+    for (var i=1,l=points.length; i<l; i++) {
+        exportArr.push({x:points[i].meterY,y:points[i].meterX,theta:points[i].theta});
     }
 
     var fileContentsString; // actual text of the file
@@ -11,8 +11,14 @@ function downloadExport() {
 
     switch (document.getElementById("exportSelection").value) {
         case "java":
-            // TODO
-            fileContentsString = "";
+            var s = `import frc.lib5k.kinematics.FieldPosition;\n\npublic class Path{\n\tpublic static FieldPosition[] path = {\n`;
+            
+            for (var i=0; i<exportArr.length; i++) {
+                s += `\t\tnew FieldPosition(${exportArr[i].x},${exportArr[i].y},${exportArr[i].theta})${i!==exportArr.length-1 ? "," : ""}\n`;
+            }
+
+            s += `\t};\n}`;
+            fileContentsString = s;
             fileType = "text/plain";
             fileName = "points.java";
             break;

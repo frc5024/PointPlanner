@@ -1,10 +1,11 @@
 class point {
-    constructor(x,y,angle=0) {
+    constructor(x,y,angle=0,type="point") {
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.r = 4;
+        this.r = type==="origin"?7:5;
         this.id = pointTableCounter;
+        this.type = type;
         pointTableCounter++;
 
         addTableRow(this);
@@ -15,6 +16,7 @@ class point {
 
         this.meterX = this.metersBasedOnPixels().x;
         this.meterY = this.metersBasedOnPixels().y;
+        this.theta = this.thetaBasedOnAngle();
     }
     // get and set position in pixels from top left
     set pixelX(n) {this.x = n;}
@@ -34,8 +36,13 @@ class point {
 }
 
 point.prototype.draw = function() {
-    img(arrow, this.x * ratio.x, this.y * ratio.y, degToRad(this.angle));
-    circle(this.x * ratio.x, this.y * ratio.y, this.r, "#53e346");
+    if(this.type === "origin") {
+        img(blueArrow, this.x * ratio.x, this.y * ratio.y, degToRad(this.angle));
+        circle(this.x * ratio.x, this.y * ratio.y, this.r, "#3ae0e3");
+    } else {
+        img(arrow, this.x * ratio.x, this.y * ratio.y, degToRad(this.angle));
+        circle(this.x * ratio.x, this.y * ratio.y, this.r, "#53e346");
+    }
 }
 
 // Takes a mouse position, and the index of the point in the points array as an argument
@@ -96,6 +103,17 @@ point.prototype.update = function(pos,i) {
         if (grabInfo.part === "point") { // if the point is grabbed
             cursor = "grabbing";
             // set pixel positions to mouse position
+            if(this.type === "origin") {
+                for(var i=0;i<points.length;i++) {
+                    if(points[i].type !== "origin") {
+                        points[i].x += this.pixelX - pos.x;
+                        points[i].y += this.pixelY - pos.y;
+                        points[i].meterX = points[i].metersBasedOnPixels().x;
+                        points[i].meterY = points[i].metersBasedOnPixels().y;
+                    }
+                }
+            }
+
             this.pixelX = pos.x;
             this.pixelY = pos.y;
 
@@ -106,36 +124,67 @@ point.prototype.update = function(pos,i) {
             // if the mouse is not held, stop being grabbed
             if (!mouseDown[0]) {
                 grabInfo.grabbing = false;
-                save();
             }
         }
         if (grabInfo.part === "arrow") { // if the arrow is grabbed
             cursor = "grabbing";
             // get angle pointing towards mouse in degrees
-            var angleToSet = Math.round(radToDeg(pointTo(this,pos)));
-            // change angles from -90 to -1 into 270 to 359
-            if (angleToSet<0) {
-                angleToSet = 360 + angleToSet;
+            var angleToSet = limitAngle(Math.round(radToDeg(pointTo(this,pos))));
+
+            if(this.type === "origin") {
+                for(var i=0;i<points.length;i++) {
+                    if(points[i].type !== "origin") {
+                        points[i].angle += this.angle - angleToSet;
+                        points[i].theta = points[i].thetaBasedOnAngle();
+                    }
+                }
             }
 
-            // set angle in table
-            this.theta = angleToSet;
             // set this angle
             this.angle = angleToSet;
+
+            this.theta = this.thetaBasedOnAngle();
 
             // if the mouse is not held, stop being grabbed
             if (!mouseDown[0]) {
                 grabInfo.grabbing = false;
-                save();
             }
         }
     }
 
     // if inputs in table are different from this point's values, set this point's values to the values in the table
     var meters = this.metersBasedOnPixels();
-    if (this.meterX !== meters.x) {this.pixelX = this.pixelsBasedOnMeters().x;save();}
-    if (this.meterY !== meters.y) {this.pixelY = this.pixelsBasedOnMeters().y;save();}
-    if (this.angle !== this.theta) {this.angle = this.theta;save();}
+
+    if(this.type === "origin") {
+        if(this.meterX !== meters.x || this.meterY !== meters.y || this.angle !== this.theta) {
+            var difX = this.pixelX - this.pixelsBasedOnMeters().x;
+            var difY = this.pixelY - this.pixelsBasedOnMeters().y;
+            var difA = this.angle - this.theta;
+            if(isNaN(difX)) {difX=0;}
+            if(isNaN(difY)) {difY=0;}
+            if(isNaN(difA)) {difA=0;}
+            for(var i=0;i<points.length;i++) {
+                if(points[i].type !== "origin") {
+                    points[i].x += difX;
+                    points[i].y += difY;
+                    points[i].meterX = points[i].metersBasedOnPixels().x;
+                    points[i].meterY = points[i].metersBasedOnPixels().y;
+                    points[i].angle += difA;
+                    points[i].theta = points[i].thetaBasedOnAngle();
+                }
+            }
+        }
+    }
+
+    if (this.meterX !== meters.x) {this.pixelX = this.pixelsBasedOnMeters().x;}
+    if (this.meterY !== meters.y) {this.pixelY = this.pixelsBasedOnMeters().y;}
+    if (this.thetaBasedOnAngle() !== this.theta) {this.angle = this.angleBasedOnTheta();}
+
+    if (this.type === "origin") {
+        origin.x = isNaN(this.meterX)?0:this.meterX;
+        origin.y = isNaN(this.meterY)?0:this.meterY;
+        origin.angle = isNaN(this.theta)?0:this.theta;
+    }
 }
 
 // returns an object with and x and y property representing meter distance from the bottom left corner of the field. Calculated with pixels
@@ -149,8 +198,8 @@ point.prototype.metersBasedOnPixels = function() {
     var pixelsPerMeter = [ (br[0]-tl[0]) / meterDimensions[0], (br[1]-tl[1]) / meterDimensions[1] ];
 
     var returnObj = {
-        x: this.pixelX / pixelsPerMeter[0],
-        y: ((br[1]-tl[1]) - this.pixelY) / pixelsPerMeter[1]
+        x: (this.pixelX / pixelsPerMeter[0]) - (this.type==="point"?origin.x:0),
+        y: ((br[1]-tl[1]- this.pixelY) / pixelsPerMeter[1]) - (this.type==="point"?origin.y:0)
     }
     returnObj.x = Math.round(returnObj.x*100)/100;
     returnObj.y = Math.round(returnObj.y*100)/100;
@@ -169,14 +218,22 @@ point.prototype.pixelsBasedOnMeters = function() {
     var pixelsPerMeter = [ (br[0]-tl[0]) / meterDimensions[0], (br[1]-tl[1]) / meterDimensions[1] ];
 
     var returnObj = {
-        x: this.meterX * pixelsPerMeter[0], 
-        y: -((this.meterY * pixelsPerMeter[1]) - (br[1]-tl[1]))
+        x: (this.meterX + (this.type==="point"?origin.x:0)) * pixelsPerMeter[0], 
+        y: -(((this.meterY + (this.type==="point"?origin.y:0)) * pixelsPerMeter[1]) - (br[1]-tl[1]))
     };
 
     returnObj.x = Math.round(returnObj.x);
     returnObj.y = Math.round(returnObj.y);
     
     return returnObj;
+}
+
+point.prototype.thetaBasedOnAngle = function() {
+    return limitAngle(this.angle-(this.type==="point"?origin.angle:0));
+}
+
+point.prototype.angleBasedOnTheta = function() {
+    return limitAngle(this.theta+(this.type==="point"?origin.angle:0));
 }
 
 // adds a table row containing x, y, and theta inputs, and a delete button. Takes a point as an argument
@@ -207,24 +264,29 @@ function addTableRow(p) {
         }
 
         // delete button
-        var td = document.createElement("td");
-            var button = document.createElement("button");
-            button.className = "redButton";
-            button.innerHTML = "x";
-            button.id = `${p.id}`;
-            button.onclick = function() {
-                var bID = parseInt(this.id);
-                for (var i=0;i<points.length;i++) {
-                    if (points[i].id === bID) {
-                        points.splice(i,1);
-                        i = points.length;
+        if(p.type === "origin") {
+            var td = document.createElement("td");
+            tr.appendChild(td);
+        } else {
+            var td = document.createElement("td");
+                var button = document.createElement("button");
+                button.className = "redButton";
+                button.innerHTML = "x";
+                button.id = `${p.id}`;
+                button.onclick = function() {
+                    var bID = parseInt(this.id);
+                    for (var i=0;i<points.length;i++) {
+                        if (points[i].id === bID) {
+                            points.splice(i,1);
+                            i = points.length;
+                        }
                     }
-                }
-                document.getElementById("pointTable").removeChild(this.parentNode.parentNode);
-                save();
-            };
-            td.appendChild(button);
-        tr.appendChild(td);
+                    document.getElementById("pointTable").removeChild(this.parentNode.parentNode);
+                    save();
+                };
+                td.appendChild(button);
+            tr.appendChild(td);
+        }
 
     document.getElementById("pointTable").appendChild(tr);
 }

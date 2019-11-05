@@ -21,3 +21,13 @@ function pointTo(point,targetPoint) {
     var h = Math.atan2(opposite, adjacent);
     return h;
 }
+
+function limitAngle(a) {
+    if(a>359) {
+        return a-360;
+    }
+    if(a<0) {
+        return 360+a;
+    }
+    return a;
+}
