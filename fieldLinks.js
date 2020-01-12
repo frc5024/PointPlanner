@@ -3,8 +3,8 @@
 var links = [
     // 2020
     {
-        imageURL:"resources/2020-Field.png",
-        jsonURL:"resources/2020-InfiniteRecharge.json"
+        imageURL:"https://raw.githubusercontent.com/wpilibsuite/PathWeaver/master/src/main/resources/edu/wpi/first/pathweaver/2020-Field.png",
+        jsonURL:"https://raw.githubusercontent.com/wpilibsuite/PathWeaver/master/src/main/resources/edu/wpi/first/pathweaver/2020-infiniterecharge.json"
     },
     // 2019
     {
