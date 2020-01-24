@@ -2,7 +2,7 @@ function downloadExport() {
     // create an array of objects with the desired x, y and angle
     var exportArr = [];
     for (var i=1,l=points.length; i<l; i++) {
-        exportArr.push({x:points[i].meterY,y:points[i].meterX,theta:points[i].theta});
+        exportArr.push({x:points[i].meterX,y:-points[i].meterY,theta:points[i].theta});
     }
 
     var fileContentsString; // actual text of the file

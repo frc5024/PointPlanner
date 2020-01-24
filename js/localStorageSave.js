@@ -45,5 +45,5 @@ function addOrigin() {
     var fc = fieldJSONs[selectedField]["field-corners"];
     var tl = fc["top-left"];
     var br = fc["bottom-right"];
-    points.splice(0,0,new point(0, br[1]-tl[1], 0, "origin"));
+    points.splice(0,0,new point(0, (br[1]-tl[1])/2, 0, "origin"));
 }

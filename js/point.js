@@ -27,8 +27,8 @@ class point {
     // get and set position in meters from bottom left
     set meterX(n) {this.xCell.value = n;}
     get meterX() {return parseFloat(this.xCell.value);}
-    set meterY(n) {this.yCell.value = n;}
-    get meterY() {return parseFloat(this.yCell.value);}
+    set meterY(n) {this.yCell.value = -n;}
+    get meterY() {return -parseFloat(this.yCell.value);}
 
     // get and set angle number in the table
     set theta(n) {this.angleCell.value = n;}
