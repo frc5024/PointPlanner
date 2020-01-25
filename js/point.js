@@ -31,8 +31,11 @@ class point {
     get meterY() {return -parseFloat(this.yCell.value);}
 
     // get and set angle number in the table
-    set theta(n) {this.angleCell.value = n;}
-    get theta() {return parseInt(this.angleCell.value);}
+    set theta(n) {this.angleCell.value = (n > 180 ? -(360 - n) : n);}
+    get theta() {
+        var n=parseInt(this.angleCell.value);
+        return (n<0 ? 180+(180+(n)) : n);
+    }
 }
 
 point.prototype.draw = function() {
