@@ -25,9 +25,60 @@
                     <th>θ</th>
                     <th>ε</th>
                     <th>speed</th>
+                    <th>accel</th>
                 </tr>
             </table>
         </div>
+
+        <!-- code preview div -->
+        <div id="code">
+            <h2 class="title">Code Preview</h2>
+            <div id="codeblock">
+<pre>
+<span class="lightblue">package</span> <b>Player needs to specify the package name</b> 
+
+<span class="lightblue">import</span> edu.wpi.first.wpilibj.geometry.Pose2d;
+<span class="lightblue">import</span> edu.wpi.first.wpilibj.geometry.Rotation2d;
+<span class="lightblue">import</span> edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+<span class="lightblue">import</span> edu.wpi.first.wpilibj2.command.WaitCommand;
+<span class="lightblue">import</span> frc.robot.autonomous.AutonomousStartpoints;
+<span class="lightblue">import</span> frc.robot.autonomous.actions.LinePath;
+<span class="lightblue">import</span> frc.robot.autonomous.actions.TurnToCommand;
+<span class="lightblue">import</span> frc.robot.autonomous.actions.VisionAlign;
+<span class="lightblue">import</span> frc.robot.autonomous.helpers.SpeedConstraint;
+<span class="lightblue">import</span> frc.robot.autonomous.paths.AutonomousPath;
+<span class="lightblue">import</span> frc.robot.autonomous.actions.DriveDistance;
+<span class="lightblue">import</span> frc.robot.autonomous.actions.DriveToCommand;
+
+<span class="lightblue">public class</span> <span class="green">ScoreRight</span> <span class="lightblue">extends</span> <span class="teal">AutonomousPath</span> {
+    <!-- <span class="teal">@Override</span>
+    <span class="lightblue">public</span> <span class="teal">Pose2d</span> <span class="yellow">getStartingPose</span>() {
+        <span id="initialPos"></span>
+    } -->
+    <span class="teal">@Override</span>
+    <span class="lightblue">protected</span> <span class="teal">SequentialCommandGroup</span> <span class="yellow">getCommand</span>() {
+        <span class="green">// Create output command group</span>
+        <span class="teal">SequentialCommandGroup</span> <span class="blue">output</span> = <span class="purple">new</span> <span class="yellow">SequentialCommandGroup</span>();
+
+        <span class="green">// Ensure robot is facing the correct angle at the start</span>
+        <span id="startAngle"></span>
+
+        <span class="green">// Auto goes here</span>
+        
+<span id="codespan"></span>
+    }
+
+}
+
+
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- points preview canvas -->
+    <div id="cvsDiv">
+        <canvas id="cvs"></canvas>
     </div>
     <script src="js/fileIO.js"></script>
     <script src="js/main.js"></script>
