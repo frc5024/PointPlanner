@@ -14,9 +14,13 @@
             <p style="margin: 2px 0 0 2px;">Raider<b>Robotics</b></p>
         </div>
         <span>select csv to upload</span><input type="file" accept=".csv" id="fileUpload">
+        
 
         <!-- point list div-->
         <div id="points">
+        <button onclick="download()">Download</button><span style="margin-left: 10px;">preview field:</span><select id="fieldSelection" class="dropDown" value="0" ></select>
+        <div style="text-align: right;border: none;"><span style="padding: 0% 0% 0% 2%;">package name:</span><input type="text" id="packageNameInput" style="margin-right: 2%;width: 50%;"></div>
+        <div style="text-align: right;border: none;"><span style="padding: 0% 0% 0% 2%;">path name:</span><input type="text" id="pathNameInput" style="margin-right: 2%;width: 50%;"></div>
             <h2 class="title">Points</h2>
             <table id="pointTable">
                 <tr>    
@@ -35,7 +39,7 @@
             <h2 class="title">Code Preview</h2>
             <div id="codeblock">
 <pre>
-<span class="lightblue">package</span> <b>Player needs to specify the package name</b> 
+<span class="lightblue">package</span> <span id="packageName"></span>;
 
 <span class="lightblue">import</span> edu.wpi.first.wpilibj.geometry.Pose2d;
 <span class="lightblue">import</span> edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -50,11 +54,14 @@
 <span class="lightblue">import</span> frc.robot.autonomous.actions.DriveDistance;
 <span class="lightblue">import</span> frc.robot.autonomous.actions.DriveToCommand;
 
-<span class="lightblue">public class</span> <span class="green">ScoreRight</span> <span class="lightblue">extends</span> <span class="teal">AutonomousPath</span> {
-    <!-- <span class="teal">@Override</span>
+<span class="green">// Generated with the help of Point Planner and Point Interpreter</span>
+<span class="lightblue">public class</span> <span class="green" id="pathName"></span> <span class="lightblue">extends</span> <span class="teal">AutonomousPath</span> {
+    
+    <span class="teal">@Override</span>
     <span class="lightblue">public</span> <span class="teal">Pose2d</span> <span class="yellow">getStartingPose</span>() {
         <span id="initialPos"></span>
-    } -->
+    }
+
     <span class="teal">@Override</span>
     <span class="lightblue">protected</span> <span class="teal">SequentialCommandGroup</span> <span class="yellow">getCommand</span>() {
         <span class="green">// Create output command group</span>
@@ -62,16 +69,12 @@
 
         <span class="green">// Ensure robot is facing the correct angle at the start</span>
         <span id="startAngle"></span>
-
-        <span class="green">// Auto goes here</span>
         
 <span id="codespan"></span>
+        <span class="purple">return</span> output;
     }
 
-}
-
-
-</pre>
+}</pre>
             </div>
         </div>
     </div>
@@ -80,6 +83,9 @@
     <div id="cvsDiv">
         <canvas id="cvs"></canvas>
     </div>
+    <script src="../fieldLinks.js"></script>
+    <script src="js/loading.js"></script>
+    <script src="js/drawPoints.js"></script>
     <script src="js/fileIO.js"></script>
     <script src="js/main.js"></script>
 </body>
